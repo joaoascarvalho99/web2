@@ -2,13 +2,17 @@
 session_start();
 include "db.php";
 
+
+
+
+
 //echo date("Y-m-d H:i");
 
 
-   //$con = estabelecerConexao();
+   $con = estabelecerConexao();
 
-   // Construir uma Query 'SELECT * FROM fotos'
-   //$res = $con->query( 'SELECT * FROM fotos' );
+    Construir uma Query 'SELECT * FROM fotos'
+   $res = $con->query( 'SELECT * FROM fotos' );
 
 ?>
 

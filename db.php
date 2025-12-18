@@ -1,25 +1,33 @@
 <?php
 
-function estabelecerConexao()
-{
-   // Podem mais tarde passar para um ficheiro de configuração
-   $hostname = 'localhost';
-   $dbname = 'u506280443_isajoaDB';
-   $username = 'u506280443_isajoadbUser';
-   $password = '#&Ja145zU~';
+   function estabelecerConexao(){
+      $hostname = 'localhost';
+      $dbname   = 'u506280443_isajoaDB';
+      $username = 'u506280443_isajoadbUser';
+      $password = '#&Ja145zU~';
 
-   try {
-         $conexao = new PDO( "mysql:host=$hostname;dbname=$dbname;charset=utf8mb4",
-                              $username, $password );
+      try {
+         $conexao = new PDO(
+            "mysql:host=$hostname;dbname=$dbname;charset=utf8mb4",
+            $username,
+            $password,
+            [
+               PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+               PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+            ]
+         );
+         return $conexao;
+      } catch (PDOException $e) {
+         die("Erro na ligação à base de dados: " . $e->getMessage());
+      }
    }
-   catch( PDOException $e ) {
-      echo $e->getMessage();
+
+   function posts(){
+      $con = estabelecerConexao();
+      $sql = "SELECT * FROM post LIMIT 10";
+      $stmt = $con->query($sql);
+      $dados = $stmt->fetchAll();
+      return $dados;
    }
-
-   return $conexao;
-    
-}
-
-
-
+   
 ?>

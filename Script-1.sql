@@ -8,8 +8,8 @@ CREATE TABLE users (
     username VARCHAR(20) NOT NULL UNIQUE,
     password VARCHAR(30) NOT NULL,
     email VARCHAR(30) NOT NULL UNIQUE,
-    fk_img INT NOT NULL,
-	FOREIGN KEY (fk_img) REFERENCES imgs(imgid)
+    fk_imgid INT NOT NULL,
+	FOREIGN KEY (fk_imgid) REFERENCES imgs(imgid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE tema(
@@ -21,18 +21,23 @@ CREATE TABLE post(
 	postid INT AUTO_INCREMENT PRIMARY KEY,
 	fk_userid INT NOT NULL,
 	fk_temaid INT NOT NULL,
-	fk_img INT,
+	fk_imgid INT DEFAULT NULL,
 	postname VARCHAR(40) NOT NULL,
 	posttext VARCHAR(1000) NOT NULL,
+	code VARCHAR(500) DEFAULT NULL,
+	comments INT NOT NULL DEFAULT 0,
+  	upvotes INT NOT NULL DEFAULT 0,
+  	downvotes INT NOT NULL DEFAULT 0,
+  	created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (fk_temaid) REFERENCES tema(temaid),
-	FOREIGN KEY (fk_img) REFERENCES imgs(imgid),
+	FOREIGN KEY (fk_imgid) REFERENCES imgs(imgid),
 	FOREIGN KEY (fk_userid) REFERENCES users(userid)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE comentarios(
 	fk_postid INT NOT NULL,
 	fk_userid INT NOT NULL,
-	fk_imgid INT,
+	fk_imgid INT DEFAULT NULL,
 	comentario VARCHAR(1000) NOT NULL,
 	data VARCHAR(16) NOT NULL,
 	FOREIGN KEY (fk_postid) REFERENCES post(postid),

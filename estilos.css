@@ -1,106 +1,250 @@
-/* Resetando algumas configurações padrão do navegador */
+.post-img {
+    width: 100%;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: block
+}
+
+:root {
+    --bg: #f6f7f8;
+    --panel: #ffffff;
+    --muted: #6b6f76;
+    --accent: #ff4500;
+    --card-border: #e6e6e6;
+    --sidebar: #f2f4f6;
+    --max-width: 1100px;
+    --radius: 10px;
+    --font-sans: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    box-sizing: border-box
 }
 
+html,
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f1f1f1;
-    color: #333;
+    height: 100%;
+    margin: 0;
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: #111
 }
 
-header {
-    background-color: #FF4500;
-    padding: 20px;
-    color: white;
+.container {
+    display: grid;
+    grid-template-columns: 300px 1fr 300px;
+    gap: 20px;
+    padding: 0 16px
 }
 
-nav {
+header.global {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.75));
+    backdrop-filter: blur(4px);
+    border-bottom: 1px solid var(--card-border);
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    gap: 12px;
+    padding: 8px 24px;
+    margin-bottom: 16px;
 }
 
-nav .logo {
-    font-size: 1.5em;
-    font-weight: bold;
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px
 }
 
-nav .menu a {
-    margin: 0 15px;
+.logo .mark {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     color: white;
-    text-decoration: none;
+    font-weight: 700
 }
 
-nav .menu a:hover {
-    text-decoration: underline;
+.search {
+    flex: 1
 }
 
-main {
-    padding: 20px;
+.search input {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--card-border);
+    background: transparent
 }
 
-.posts {
+.user-actions {
+    display: flex;
+    gap: 8px
+}
+
+.btn {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    background: var(--panel);
+    cursor: pointer
+}
+
+.sidebar {
+    background: var(--sidebar);
+    padding: 16px;
+    border-radius: var(--radius);
+    height: fit-content
+}
+
+.sub-list {
+    list-style: none;
+    padding: 0;
+    margin: 0
+}
+
+.sub-list li {
+    padding: 8px 6px;
+    border-radius: 8px;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer
+}
+
+.sub-list li:hover {
+    background: #fff
+}
+
+.sub-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600
+}
+
+.feed {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 12px
 }
 
 .post {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
     padding: 20px;
-    gap: 20px;
+    background: var(--panel);
+    border-radius: 12px;
+    border: 1px solid var(--card-border)
 }
 
-.upvote {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.post-body h3 {
+    margin: 0 0 6px 0;
+    font-size: 16px
 }
 
-.upvote button {
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
-    font-size: 1.5em;
-}
-
-.upvote span {
-    margin: 10px 0;
-    font-size: 1.2em;
+.post-meta {
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 8px
 }
 
 .post-content {
-    flex-grow: 1;
+    font-size: 15px;
+    color: #222
 }
 
-.post-content h2 {
-    margin-bottom: 10px;
-    font-size: 1.5em;
+.post-footer {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 12px;
+    color: var(--muted);
+    font-size: 13px
 }
 
-.post-content p {
-    font-size: 1em;
-    margin-bottom: 10px;
+.post-footer button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 6px 8px;
+    border-radius: 6px;
+    color: inherit;
+    transition: background 0.15s ease, color 0.15s ease
 }
 
-.post-content a {
-    color: #FF4500;
-    text-decoration: none;
+.post-footer button:hover {
+    background: rgba(0, 0, 0, 0.05);
+    color: #111
 }
 
-.post-content a:hover {
-    text-decoration: underline;
+.post-footer img {
+    width: 16px;
+    height: 16px;
+    display: block;
+    opacity: 0.6;
+    transition: opacity 0.15s ease
 }
 
-footer {
-    text-align: center;
-    padding: 10px;
-    background-color: #FF4500;
-    color: white;
+.post-footer button:hover img {
+    opacity: 1
+}
+
+.trending {
+    background: var(--panel);
+    padding: 12px;
+    border-radius: var(--radius);
+    border: 1px solid var(--card-border)
+}
+
+.trending h4 {
+    margin: 0 0 10px 0
+}
+
+.trend-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 6px;
+    border-radius: 8px
+}
+
+@media (max-width:1024px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar,
+    .trending {
+        order: 2
+    }
+}
+
+a {
+    color: inherit;
+    text-decoration: none
+}
+
+.pill {
+    background: #f3f4f6;
+    padding: 6px 8px;
+    border-radius: 999px;
+    font-size: 13px
+}
+
+.code-block {
+    background: #fafafa;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    overflow: auto
 }

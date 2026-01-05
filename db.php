@@ -2,9 +2,9 @@
 
    function estabelecerConexao(){
       $hostname = 'localhost';
-      $dbname   = 'u506280443_isajoaDB';
-      $username = 'u506280443_isajoadbUser';
-      $password = '#&Ja145zU~';
+      $dbname   = 'test';
+      $username = 'root';
+      $password = '';
 
       try {
          $conexao = new PDO(
@@ -32,6 +32,7 @@
 
    function finduser($username, $password){
       $con = estabelecerConexao();
+      $password = password_hash($password, PASSWORD_DEFAULT);
       if(filter_var($username, FILTER_VALIDATE_EMAIL)){
          $sql = "SELECT * FROM users WHERE email = '$username' AND password = '$password'";
       }else{
@@ -97,14 +98,15 @@
       return $temas;
    }
 
-   function register($username, $email, $password){
+   function register($username, $email, $password) {
       $con = estabelecerConexao();
-      $sql = "INSERT INTO users (username, password, email, fk_imgid) VALUES ('isaac', 'pass123', 'isaac@mail.com', 1),";
+      $sql = "INSERT INTO users (username, password, email, fk_imgid) VALUES (:username, :password, :email, :fk_imgid)";
       $stmt = $con->prepare($sql);
       $stmt->execute([
-         'username' => $username,
-         'email' => $email,
-         'password' => $password
+      ':username' => $username,
+      ':email'    => $email,
+      ':password' => password_hash($password, PASSWORD_DEFAULT),
+      ':fk_imgid' => 1
       ]);
       return $con->lastInsertId();
    }

@@ -2,9 +2,9 @@
 
    function estabelecerConexao(){
       $hostname = 'localhost';
-      $dbname   = 'test';
-      $username = 'root';
-      $password = '';
+      $dbname   = 'u506280443_isajoaDB';
+      $username = 'u506280443_isajoadbUser';
+      $password = '#&Ja145zU~';
 
       try {
          $conexao = new PDO(

@@ -22,7 +22,6 @@
         $email = $_POST['email'];
         $password = $_POST['password'];
         $res = register($username, $email, $password);
-        show_var($res);
     }
 
     if(!isset($_GET["l"])){

@@ -1,12 +1,12 @@
 <?php
 
+    session_start();
     include "utils.php";
     include "db.php";
 
-    //show_var($teste);
-
     function post(){
         $posts = posts();
+        $temas = temas();
         // aqui iriam os 10 posts buscados na base de dados para nao sobrecarregar a página
         foreach($posts as $post){
             // renderiza o post
@@ -15,12 +15,15 @@
             else:
                 $post['fk_img'] = "";
             endif;
-            $post['created_at'] = data($post['created_at']);
+            $post['data'] = data($post['data']);
+            $post["fk_userid"] = finduserid($post["fk_userid"])[0]['username'];
+            $tema = array_filter($temas, fn($t) => $t['temaid'] == $post['fk_temaid']);
+            $tema = array_values($tema)[0]['temaname'];
             echo <<<POST
                 <div class="post">
                     <div class="post-body">
                         <div class="post-meta">
-                            <strong>t/{$post['fk_temaid']}</strong> • por u/{$post['fk_userid']} • há {$post['created_at']}
+                            <strong>t/{$tema}</strong> • por u/{$post['fk_userid']} • há {$post['data']}
                         </div>
                         <h3>{$post['postname']}</h3>
                         <div class="post-content">
@@ -38,6 +41,44 @@
         }
     }
 
+    function tends() {
+        $trends = getTrendTemas();
+        foreach($trends as $trend){
+            echo <<<TRENDS
+                <div class="trend-item">
+                    <div>t/{$trend["temaname"]}</div>
+                    <div class="pill">🔥 {$trend['temaid']}</div>
+                </div>
+            TRENDS;
+        }
+    }
+
+    function coms(){
+        if(isset($_SESSION['username'])){
+            echo <<<COMS
+                <h4>Comunidades</h4>
+                <ul class="sub-list">
+                    <li>
+                        <div class="sub-mark">PT</div>
+                        <div>t/Portugal</div>
+                    </li>
+                    <li>
+                        <div class="sub-mark">JS</div>
+                        <div>t/javascript</div>
+                    </li>
+                    <li>
+                        <div class="sub-mark">UX</div>
+                        <div>t/userexperience</div>
+                    </li>
+                    <li>
+                        <div class="sub-mark">AI</div>
+                        <div>t/artificial</div>
+                    </li>
+                </ul>
+            COMS;
+        }
+    }
+
 ?>
 
 <html lang="pt-PT">
@@ -45,7 +86,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Threadly</title>
-    <link rel="stylesheet" href="teste.css">
+    <link rel="stylesheet" href="estilos.css">
 </head>
 
 <body>
@@ -55,32 +96,24 @@
         </div>
         <div class="search"><input placeholder="Pesquisar comunidades, posts..."></div>
         <div class="user-actions">
-            <button class="btn">Criar</button>
-            <button class="btn">Entrar</button>
+            <?php
+                if(isset($_SESSION['username'])){
+                    echo <<< user
+                        {$_SESSION['username']}<button class="btn" onclick="location.href=\'logout.php\'">Sair</button> 
+                    user;
+                }else{
+                    echo <<< login
+                        <button class="btn" onclick="location.href='login.php?l=0'">Criar</button>
+                        <button class="btn" onclick="location.href='login.php?l=1'">Entrar</button>
+                    login;
+                }
+            ?>
         </div>
     </header>
 
     <main class="container">
         <aside class="sidebar">
-            <h4>Comunidades</h4>
-            <ul class="sub-list">
-                <li>
-                    <div class="sub-mark">PT</div>
-                    <div>t/Portugal</div>
-                </li>
-                <li>
-                    <div class="sub-mark">JS</div>
-                    <div>t/javascript</div>
-                </li>
-                <li>
-                    <div class="sub-mark">UX</div>
-                    <div>t/userexperience</div>
-                </li>
-                <li>
-                    <div class="sub-mark">AI</div>
-                    <div>t/artificial</div>
-                </li>
-            </ul>
+            <?php coms(); ?>
 
             <div style="margin-top:12px">
                 <div class="pill">Criar comunidade</div>
@@ -91,22 +124,9 @@
             <?php post(); ?>
         </section>
 
-        <aside class="trending" aria-label="Barra lateral direita">
+        <aside class="trending">
             <h4>Tendências</h4>
-            <div class="trend-item">
-                <div>t/Portugal</div>
-                <div class="pill">🔥 12.4k</div>
-            </div>
-            <div class="trend-item">
-                <div>t/technology</div>
-                <div class="pill">🔥 9.1k</div>
-            </div>
-
-            <div style="margin-top:12px">
-                <h4>Sobre</h4>
-                <p style="margin:6px 0;color:var(--muted);font-size:14px">Exemplo de layout inspirado no Reddit. Usa
-                    isto como base para um projeto ou para adaptar componentes.</p>
-            </div>
+            <?php tends(); ?>
         </aside>
     </main>
 </body>

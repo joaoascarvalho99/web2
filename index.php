@@ -8,6 +8,10 @@
     function post(){
         $posts = posts();
         $temas = temas();
+        if($posts == ""){
+            echo "<p>Nenhum post disponível.</p>";
+            return;
+        }
         // aqui iriam os 10 posts buscados na base de dados para nao sobrecarregar a página
         foreach($posts as $post){
             // renderiza o post
@@ -140,7 +144,12 @@
         </aside>
 
         <section class="feed">
-            <?php post(); ?>
+            <?php
+                if($_SESSION['username'] ?? false){
+                    echo '<button class="btn-plus">+</button>';
+                } 
+                post();
+            ?>
         </section>
 
         <aside class="trending">

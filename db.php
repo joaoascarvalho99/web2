@@ -72,7 +72,7 @@
 
    function posts(){
       $con = estabelecerConexao();
-      $sql = "SELECT * FROM post WHERE data >= NOW() - INTERVAL 7 DAY LIMIT 10";
+      $sql = "SELECT * FROM post WHERE created_at >= NOW() - INTERVAL 7 DAY LIMIT 10";
       $stmt = $con->query($sql);
       $dados = $stmt->fetchAll();
       if (!$dados) {
@@ -93,7 +93,7 @@
 
    function getTrends(){
       $con = estabelecerConexao();
-      $sql = "SELECT * FROM post WHERE data >= NOW() - INTERVAL 7 DAY ORDER BY comments DESC LIMIT 5";
+      $sql = "SELECT * FROM post WHERE created_at >= NOW() - INTERVAL 7 DAY ORDER BY comments DESC LIMIT 5";
       $stmt = $con->query($sql);
       $dados = $stmt->fetchAll();
       if (!$dados) {

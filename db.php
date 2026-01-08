@@ -138,15 +138,7 @@
       if ($user) {
          return false; // User already exists
       }
-
-      // Insert image into images table
-      $sql = "INSERT INTO imgs (imagem) VALUES (:imgdata)";
-      $stmt = $con->prepare($sql);
-      $stmt = $con->prepare($sql);
-      $stmt->execute([
-            ':imgdata' => $img
-      ]);
-      $imgId = $con->lastInsertId();
+      $imgId = createImg($img);
 
       // Insert new user
       $sql = "INSERT INTO users (username, email, password, fk_imgid) VALUES (:username, :email, :password, :fk_imgid)";
@@ -155,6 +147,52 @@
          ':username' => $username,
          ':email' => $email,
          ':password' => password_hash($password, PASSWORD_DEFAULT),
+         ':fk_imgid' => $imgId
+      ]);
+      return $con->lastInsertId();
+   }
+
+   function createImg($img) {
+      $con = estabelecerConexao();
+      $sql = "INSERT INTO imgs (imagem) VALUES (:imgdata)";
+      $stmt = $con->prepare($sql);
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+            ':imgdata' => $img
+      ]);
+      return $con->lastInsertId();
+   }
+
+   function createPost($userid, $tema, $postname, $posttext, $img) {
+      $con = estabelecerConexao();
+
+      $sql = "SELECT temaid FROM tema WHERE temaname = :temaname";
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+         ':temaname' => $tema
+      ]);
+      $temaRow = $stmt->fetch(PDO::FETCH_ASSOC);
+
+      if ($temaRow) {
+         $tema = $temaRow['temaid'];
+      } else {
+         // If the tema does not exist, create it
+         $sql = "INSERT INTO tema (temaname) VALUES (:temaname)";
+         $stmt = $con->prepare($sql);
+         $stmt->execute([
+            ':temaname' => $tema
+         ]);
+         $tema = $con->lastInsertId();
+      }
+      $imgId = createImg($img);
+
+      $sql = "INSERT INTO post (fk_userid, fk_temaid, postname, posttext, fk_imgid) VALUES (:fk_userid, :fk_temaid, :postname, :posttext, :fk_imgid)";
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+         ':fk_userid' => $userid,
+         ':fk_temaid' => $tema,
+         ':postname' => $postname,
+         ':posttext' => $posttext,
          ':fk_imgid' => $imgId
       ]);
       return $con->lastInsertId();

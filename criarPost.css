@@ -1,0 +1,112 @@
+.post-form {
+    width: 100%;
+    max-width: 100%;
+    margin: 24px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-form .post {
+    width: 100%;
+    background: var(--panel);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 16px;
+    box-sizing: border-box;
+}
+
+.post-form .post-body .post-meta {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+
+.post-form .post-body .post-meta input[name="tema"] {
+    width: 150px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    font-size: 13px;
+    vertical-align: middle;
+    box-sizing: border-box;
+    background-color: rgb(54, 54, 54);
+    color: #e03e00;
+}
+
+.post-form .post-body h3 input[name="postname"] {
+    width: 100%;
+    font-size: 17px;
+    
+    padding: 6px 8px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+    background-color: rgb(54, 54, 54);
+    color: #fff;
+}
+
+.post-form .post-content textarea[name="posttext"] {
+    width: 100%;
+    min-height: 120px;
+    padding: 10px 12px;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    resize: vertical;
+    font-family: var(--font);
+    font-size: 15px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+    background-color: rgb(54, 54, 54);
+    color: #fff;
+}
+
+.img-upload {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.img-upload label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    border: 1px solid var(--card-border);
+    padding: 6px 10px;
+    border-radius: 8px;
+    background: var(--sidebar);
+    transition: background 0.15s ease;
+    background-color: rgb(54, 54, 54);
+}
+
+.img-upload img#avatarPreview {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.img-upload input[type="file"] {
+    display: none;
+    cursor: pointer;
+}
+
+.btn-submit {
+    align-self: flex-end;
+    padding: 10px 18px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s ease;
+    margin-left: auto;
+}
+
+.btn-submit:hover {
+    background: #e03e00;
+}

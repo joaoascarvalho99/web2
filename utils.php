@@ -26,4 +26,42 @@
         return floor($diff / 31536000) . ' a';
     }
 
+    function tends() {
+        $trends = getTrendTemas();
+        foreach($trends as $trend){
+            echo <<<TRENDS
+                <div class="trend-item">
+                    <div>t/{$trend["temaname"]}</div>
+                    <div class="pill">🔥 {$trend['temaid']}</div>
+                </div>
+            TRENDS;
+        }
+    }
+
+    function coms(){
+        if(isset($_SESSION['username'])){
+            echo <<<COMS
+                <h4>Comunidades</h4>
+                <ul class="sub-list">
+                    <li>
+                        <div class="sub-mark">PT</div>
+                        <div>t/Portugal</div>
+                    </li>
+                    <li>
+                        <div class="sub-mark">JS</div>
+                        <div>t/javascript</div>
+                    </li>
+                    <li>
+                        <div class="sub-mark">UX</div>
+                        <div>t/userexperience</div>
+                    </li>
+                    <li>
+                        <div class="sub-mark">AI</div>
+                        <div>t/artificial</div>
+                    </li>
+                </ul>
+            COMS;
+        }
+    }
+    
 ?>

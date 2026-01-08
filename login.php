@@ -229,17 +229,17 @@
             ?>
         </form>
     </div>
-    <script>
-    document.getElementById('avatar').addEventListener('change', function () {
-        const file = this.files[0];
-        if (!file) return;
+            <script>
+                document.getElementById('avatar').addEventListener('change', function () {
+                    const file = this.files[0];
+                    if (!file) return;
 
-        const reader = new FileReader();
-        reader.onload = () => {
-            document.getElementById('avatarPreview').src = reader.result;
-        };
-        reader.readAsDataURL(file);
-    });
-</script>
+                    const reader = new FileReader();
+                    reader.onload = () => {
+                        document.getElementById('avatarPreview').src = reader.result;
+                    };
+                    reader.readAsDataURL(file);
+                });
+            </script>
 </body>
 </html>

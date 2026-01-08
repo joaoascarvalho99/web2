@@ -20,7 +20,7 @@
             else:
                 $post['fk_img'] = "";
             endif;
-            $post['data'] = data($post['data']);
+            $post['created_at'] = data($post['created_at']);
             $post["fk_userid"] = finduserid($post["fk_userid"])[0]['username'];
             $tema = array_filter($temas, fn($t) => $t['temaid'] == $post['fk_temaid']);
             $tema = array_values($tema)[0]['temaname'];
@@ -28,7 +28,7 @@
                 <div class="post">
                     <div class="post-body">
                         <div class="post-meta">
-                            <strong>t/{$tema}</strong> • por u/{$post['fk_userid']} • há {$post['data']}
+                            <strong>t/{$tema}</strong> • por u/{$post['fk_userid']} • {$post['created_at']}
                         </div>
                         <h3>{$post['postname']}</h3>
                         <div class="post-content">
@@ -43,44 +43,6 @@
                     </div>
                 </div>
             POST;
-        }
-    }
-
-    function tends() {
-        $trends = getTrendTemas();
-        foreach($trends as $trend){
-            echo <<<TRENDS
-                <div class="trend-item">
-                    <div>t/{$trend["temaname"]}</div>
-                    <div class="pill">🔥 {$trend['temaid']}</div>
-                </div>
-            TRENDS;
-        }
-    }
-
-    function coms(){
-        if(isset($_SESSION['username'])){
-            echo <<<COMS
-                <h4>Comunidades</h4>
-                <ul class="sub-list">
-                    <li>
-                        <div class="sub-mark">PT</div>
-                        <div>t/Portugal</div>
-                    </li>
-                    <li>
-                        <div class="sub-mark">JS</div>
-                        <div>t/javascript</div>
-                    </li>
-                    <li>
-                        <div class="sub-mark">UX</div>
-                        <div>t/userexperience</div>
-                    </li>
-                    <li>
-                        <div class="sub-mark">AI</div>
-                        <div>t/artificial</div>
-                    </li>
-                </ul>
-            COMS;
         }
     }
 
@@ -146,7 +108,9 @@
         <section class="feed">
             <?php
                 if($_SESSION['username'] ?? false){
-                    echo '<button class="btn-plus">+</button>';
+                    echo <<< BTN
+                        <button class="btn-plus" onclick="location.href='post.php'">+</button>
+                    BTN;
                 } 
                 post();
             ?>

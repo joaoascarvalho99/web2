@@ -3,6 +3,7 @@
     session_start();
     include "utils.php";
     include "db.php";
+    include "avatar.php";
 
     function post(){
         $posts = posts();
@@ -87,6 +88,19 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Threadly</title>
     <link rel="stylesheet" href="estilos.css">
+    <style>
+        .avatar-upload {
+            max-width: 40px;
+            max-height: 40px;
+        }
+
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 
 <body>
@@ -98,8 +112,13 @@
         <div class="user-actions">
             <?php
                 if(isset($_SESSION['username'])){
+                    avatar($_SESSION['img']);
                     echo <<< user
-                        {$_SESSION['username']}<button class="btn" onclick="location.href=\'logout.php\'">Sair</button> 
+                        <h5>{$_SESSION['username']}</h5>
+                        <div class="avatar-upload">
+                            <img src="imagem_recuperada.jpg" alt="Avatar">
+                        </div>
+                        <button class="btn" onclick="location.href='\logout.php'">Sair</button> 
                     user;
                 }else{
                     echo <<< login

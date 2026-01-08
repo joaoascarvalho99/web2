@@ -10,9 +10,10 @@
         $username = $_POST['username'];
         $password = $_POST['password'];
         $res = finduser($username, $password);
-        if($res[0]["userid"] ?? false){
+        if($res){
             $_SESSION['username'] = $res['username'];
             $_SESSION['userid'] = $res['userid'];
+            $_SESSION['img'] = $res['img'];
             echo '<script>window.location.href = "index.php";</script>';
         }else{
             $erro = True;
@@ -21,7 +22,16 @@
         $username = $_POST['username'];
         $email = $_POST['email'];
         $password = $_POST['password'];
-        $res = register($username, $email, $password);
+        $img = file_get_contents($_FILES["avatar"]["tmp_name"]);
+        $res = register($username, $email, $password, $img);
+        if($res == false){
+            $erro = True;
+        }else{
+            $_SESSION['username'] = $username;
+            $_SESSION['userid'] = $res;
+            $_SESSION['img'] = $img;
+            echo '<script>window.location.href = "index.php";</script>';
+        }
     }
 
     if(!isset($_GET["l"])){
@@ -123,6 +133,51 @@
             color: #ff6666;
             margin-bottom: 16px;
         }
+
+        .avatar-upload {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .avatar-upload input {
+            display: none;
+        }
+
+        .avatar-upload label {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            overflow: hidden;
+            cursor: pointer;
+            position: relative;
+            border: 2px dashed var(--card-border);
+            background: #0f1113;
+        }
+
+        .avatar-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .avatar-upload span {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            color: var(--muted);
+            background: rgba(0,0,0,0.4);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .avatar-upload label:hover span {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -131,16 +186,24 @@
             <div class="mark">T</div><strong>Threadly</strong>
         </div>
         <?php
-            show_var($_SESSION["userid"]);
             if ($_GET["l"] == 0) {
                 echo '<h2>Criar Conta</h2>';
             }else{
                 echo '<h2>Iniciar Sessão</h2>';
             }
         ?>
-        <form method="POST">
+        <form method="POST" enctype="multipart/form-data">
             <?php 
                 if ($_GET["l"] == 0) {
+                    echo <<<IMG
+                        <div class="avatar-upload">
+                            <label for="avatar">
+                                <img id="avatarPreview" src="default-avatar.png" alt="    ">
+                                <span>+</span>
+                            </label>
+                            <input type="file" id="avatar" name="avatar" accept="image/*" required>
+                        </div>
+                    IMG;
                     echo '<input type="text" name="username" placeholder="Nome de utilizador" required>';
                     echo '<input type="email" name="email" placeholder="Email" required>';
                 }else{
@@ -150,7 +213,11 @@
             <input type="password" name="password" placeholder="Palavra-passe" required>
             <?php
                 if($erro == True){
-                    echo '<div class="error">Nome de utilizador ou palavra-passe inválidos.</div>';
+                    if($_GET["l"] == 0)
+                        echo '<div class="error">Nome de utilizador ou email já em uso.</div>';
+                    else{
+                        echo '<div class="error">Nome de utilizador ou palavra-passe inválidos.</div>';   
+                    }
                 }
                 if ($_GET["l"] == 0) {
                     echo '<button type="submit">Registar</button>';
@@ -162,5 +229,17 @@
             ?>
         </form>
     </div>
+    <script>
+    document.getElementById('avatar').addEventListener('change', function () {
+        const file = this.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            document.getElementById('avatarPreview').src = reader.result;
+        };
+        reader.readAsDataURL(file);
+    });
+</script>
 </body>
 </html>

@@ -30,17 +30,44 @@
       return $dados;
    }
 
-   function finduser($username, $password){
+   function finduser($username, $password) {
       $con = estabelecerConexao();
-      $password = password_hash($password, PASSWORD_DEFAULT);
-      if(filter_var($username, FILTER_VALIDATE_EMAIL)){
-         $sql = "SELECT * FROM users WHERE email = '$username' AND password = '$password'";
-      }else{
-         $sql = "SELECT * FROM users WHERE username = '$username' AND password = '$password'";
+      if (filter_var($username, FILTER_VALIDATE_EMAIL)) {
+         $sql = "SELECT userid, password FROM users WHERE email = :user LIMIT 1";
+      } else {
+         $sql = "SELECT userid, password FROM users WHERE username = :user LIMIT 1";
       }
-      $stmt = $con->query($sql);
-      $dados = $stmt->fetchAll();
-      return $dados;
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+         ':user' => $username
+      ]);
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      if (!$user) {
+         return false;
+      }
+      if (!password_verify($password, $user['password'])) {
+         return false;
+      }
+      $info = [
+         'username' => $username,
+         'userid' => $user['userid'],
+         'img' => getImgId($user['userid'])
+      ];
+      return $info;
+   }
+
+   function getImgId($userid)  {
+      $con = estabelecerConexao();
+      $sql = "SELECT imagem FROM imgs WHERE imgid = (SELECT fk_imgid FROM users WHERE userid = :userid)";
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+         ':userid' => $userid
+      ]);
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      if (!$user) {
+         return false;
+      }
+      return $user['imagem'];
    }
 
    function posts(){
@@ -98,15 +125,37 @@
       return $temas;
    }
 
-   function register($username, $email, $password) {
+   function register($username, $email, $password, $img) {
       $con = estabelecerConexao();
-      $sql = "INSERT INTO users (username, password, email, fk_imgid) VALUES (:username, :password, :email, :fk_imgid)";
+      // Check if user already exists
+      $sql = "SELECT * FROM users WHERE username = :username OR email = :email";
       $stmt = $con->prepare($sql);
       $stmt->execute([
-      ':username' => $username,
-      ':email'    => $email,
-      ':password' => password_hash($password, PASSWORD_DEFAULT),
-      ':fk_imgid' => 1
+         ':username' => $username,
+         ':email' => $email
+      ]);
+      $user = $stmt->fetch(PDO::FETCH_ASSOC);
+      if ($user) {
+         return false; // User already exists
+      }
+
+      // Insert image into images table
+      $sql = "INSERT INTO imgs (imagem) VALUES (:imgdata)";
+      $stmt = $con->prepare($sql);
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+            ':imgdata' => $img
+      ]);
+      $imgId = $con->lastInsertId();
+
+      // Insert new user
+      $sql = "INSERT INTO users (username, email, password, fk_imgid) VALUES (:username, :email, :password, :fk_imgid)";
+      $stmt = $con->prepare($sql);
+      $stmt->execute([
+         ':username' => $username,
+         ':email' => $email,
+         ':password' => password_hash($password, PASSWORD_DEFAULT),
+         ':fk_imgid' => $imgId
       ]);
       return $con->lastInsertId();
    }
